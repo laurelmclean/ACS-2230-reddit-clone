@@ -19,4 +19,13 @@ app.use(express.urlencoded({ extended: false }));
 // Require controllers
 require('./controllers/posts')(app)
 
+app.get('/', (req, res) => {
+    res.render('home');
+});
+
+// Render the form
+app.get('/posts/new', (req, res) => {
+    res.render('posts-new');
+});
+
 app.listen(3000);

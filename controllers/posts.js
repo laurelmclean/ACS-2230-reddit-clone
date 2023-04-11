@@ -3,6 +3,7 @@ const Post = require('../models/post');
 module.exports = (app) => {
 
     // INDEX - all posts
+    // stretch challenge - async and await
     app.get('/', async (req, res) => {
     try {
         const posts = await Post.find({}).lean();
@@ -13,6 +14,7 @@ module.exports = (app) => {
     });
 
     // SHOW - individual post
+    // stretch challenge - async and await
     app.get('/posts/:id', async (req, res) => {
         try {
             const post = await Post.findById(req.params.id).lean();
@@ -27,16 +29,23 @@ module.exports = (app) => {
         res.render('posts-new');
     });
 
-    // CREATE
-    app.post('/posts/new', (req, res) => {
-        // INSTANTIATE INSTANCE OF POST MODEL
-        const post = new Post(req.body);
+    // NEW - form
+    app.get('/posts/new', (req, res) => {
+        res.render('posts-new');
+    });
 
-        // SAVE INSTANCE OF POST MODEL TO DB AND REDIRECT TO THE ROOT
-        post.save()
-            .then(() => {
-                res.redirect('/')
-            })
-            .catch(err => console.log(err))
+    // CREATE
+    app.post('/posts/new', async (req, res) => {
+        try {
+            // Validate form data
+            // Instantiate instance of Post model
+            const post = new Post(req.body);
+            // Save instance of Post model to DB and redirect to the root
+            await post.save();
+            res.redirect('/');
+        } catch (err) {
+            console.log(err);
+            res.status(500).send('Server error');
+        }
     });
 };
