@@ -13,22 +13,6 @@ module.exports = (app) => {
     }
     });
 
-    // SHOW - individual post
-    // stretch challenge - async and await
-    app.get('/posts/:id', async (req, res) => {
-        try {
-            const post = await Post.findById(req.params.id).lean();
-            return res.render('posts-show', { post });
-        } catch (err) {
-            console.log(err.message);
-        }
-    });
-
-    // NEW - form
-    app.get('/posts/new', (req, res) => {
-        res.render('posts-new');
-    });
-
     // NEW - form
     app.get('/posts/new', (req, res) => {
         res.render('posts-new');
@@ -48,4 +32,17 @@ module.exports = (app) => {
             res.status(500).send('Server error');
         }
     });
+
+    // SHOW - individual post
+    // stretch challenge - async and await
+    app.get('/posts/:id', async (req, res) => {
+        try {
+            const post = await Post.findById(req.params.id).lean();
+            return res.render('posts-show', { post });
+        } catch (err) {
+            console.log(err.message);
+        }
+    });
+
+
 };
