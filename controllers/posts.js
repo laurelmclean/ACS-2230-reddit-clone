@@ -2,16 +2,27 @@ const Post = require('../models/post');
 
 module.exports = (app) => {
 
-    // INDEX
-    app.get('/', (req, res) => {
-        Post.find({}).lean()
-            .then((posts) => res.render('posts-index', { posts }))
-            .catch((err) => {
-                console.log(err.message);
-            })
-    })
+    // INDEX - all posts
+    app.get('/', async (req, res) => {
+    try {
+        const posts = await Post.find({}).lean();
+        return res.render('posts-index', { posts });
+    } catch (err) {
+        console.log(err.message);
+    }
+    });
 
-    // NEW
+    // SHOW - individual post
+    app.get('/posts/:id', async (req, res) => {
+        try {
+            const post = await Post.findById(req.params.id).lean();
+            return res.render('posts-show', { post });
+        } catch (err) {
+            console.log(err.message);
+        }
+    });
+
+    // NEW - form
     app.get('/posts/new', (req, res) => {
         res.render('posts-new');
     });
