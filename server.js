@@ -1,10 +1,13 @@
 // Require Libraries
+require('dotenv').config();
 const express = require('express');
 const handlebars = require('express-handlebars');
+const cookieParser = require('cookie-parser');
 
 // App Setup
 const app = express();
 app.use(express.static('public'));
+app.use(cookieParser());
 
 // db setup
 require('./data/reddit-db');
@@ -19,6 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 // Require controllers
 require('./controllers/posts')(app); 
 require('./controllers/comments.js')(app);
+require('./controllers/auth.js')(app);
 
 app.get('/', (req, res) => {
     res.render('home');
