@@ -33,6 +33,7 @@ module.exports = (app) => {
         }
     });
 
+
     // SHOW - individual post
     // stretch challenge - async and await
     app.get('/posts/:id', async (req, res) => {
@@ -41,6 +42,16 @@ module.exports = (app) => {
             return res.render('posts-show', { post });
         } catch (err) {
             console.log(err.message);
+        }
+    });
+
+      // Subreddit
+    app.get('/n/:subreddit', async (req, res) => {
+        try {
+        const posts = await Post.find({ subreddit: req.params.subreddit }).lean();
+        res.render('posts-index', { posts });
+        } catch (err) {
+        console.log(err.message);
         }
     });
 
