@@ -5,24 +5,32 @@ module.exports = (app) => {
     // CREATE Comment
     app.post('/posts/:postId/comments', async (req, res) => {
         try {
-            // INSTANTIATE INSTANCE OF MODEL
-            const comment = new Comment(req.body);
+            if (req.user) {
+                // INSTANTIATE INSTANCE OF MODEL
+                // add current user as author
+                const comment = new Comment(req.body);
+                const userId = req.user._id;
+                comment.author = userId;
 
-            // SAVE INSTANCE OF Comment MODEL TO DB
-            await comment.save();
+                // SAVE INSTANCE OF Comment MODEL TO DB
+                await comment.save();
 
-            // FIND PARENT POST
-            const post = await Post.findById(req.params.postId);
+                // FIND PARENT POST
+                const post = await Post.findById(req.params.postId);
 
-            // ADD COMMENT REFERENCE TO POST
-            //unshift adds an element to the front of an array for chronological order
-            post.comments.unshift(comment);
-            await post.save();
+                // ADD COMMENT REFERENCE TO POST
+                //unshift adds an element to the front of an array for chronological order
+                post.comments.unshift(comment);
+                await post.save();
 
-            // REDIRECT TO ROOT
-            res.redirect('/');
+                // REDIRECT TO ROOT
+                res.redirect('/');
+            } else {
+                return res.status(401); // UNAUTHORIZED
+            }
         } catch (err) {
             console.log(err);
         }
     });
+
 };
