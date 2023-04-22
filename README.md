@@ -11,4 +11,4 @@ For this project, I developed a clone of Reddit with posts, subreddits, and auth
 
 ## To Run:
 
-`npm start` in your terminal and open in browser.
+`npm start` in terminal and launch in browser.
