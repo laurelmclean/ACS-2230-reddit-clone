@@ -20,26 +20,30 @@ module.exports = (app) => {
         res.render('posts-new');
     });
 
-    // CREATE
+    // Create a post
     app.post('/posts/new', async (req, res) => {
-        try {
-            if (req.user) {
+        // INSTANTIATE INSTANCE OF POST MODEL
+        if (req.user) {
+            try {
                 const userId = req.user._id;
+                const currentUser = req.user;
+                subredditArray = req.body.subreddits.replaceAll(' ', '').split(',');
+                req.body.subreddits = subredditArray;
                 const post = new Post(req.body);
+                post.upVotes = [];
+                post.downVotes = [];
+                post.voteScore = 0;
                 post.author = userId;
-
                 await post.save();
                 const user = await User.findById(userId);
                 user.posts.unshift(post);
                 await user.save();
-
-                // REDIRECT TO THE NEW POST
-                return res.redirect(`/posts/${post._id}`);
-            } else {
-                return res.status(401); // UNAUTHORIZED
+                return res.redirect('/');
+            } catch (err) {
+                console.log(err.message);
             }
-        } catch (err) {
-            console.log(err.message);
+        } else {
+            return res.status(401); // UNAUTHORIZED
         }
     });
 
@@ -63,6 +67,32 @@ module.exports = (app) => {
         res.render('posts-index', { posts, user });
         } catch (err) {
         console.log(err.message);
+        }
+    });
+
+    // Votes
+
+    app.put('/posts/:id/vote-up', async (req, res) => {
+        try {
+            const post = await Post.findById(req.params.id);
+            post.upVotes.push(req.user._id);
+            post.voteScore += 1;
+            await post.save();
+            return res.status(200);
+        } catch (err) {
+            console.log(err);
+        }
+    });
+
+    app.put('/posts/:id/vote-down', async (req, res) => {
+        try {
+            const post = await Post.findById(req.params.id);
+            post.downVotes.push(req.user._id);
+            post.voteScore -= 1;
+            await post.save();
+            return res.status(200);
+        } catch (err) {
+            console.log(err);
         }
     });
 
