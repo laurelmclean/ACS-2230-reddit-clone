@@ -8,7 +8,9 @@
             <div class="text-right">
                 <button type="submit" class="btn btn-primary">Save</button>
             </div>
-            {{> posts-comments}}
+            {{#each post.comments}}
+                {{> comment comment=this postId=../post._id}}
+            {{/each}}
         </form>
     </div>
 </div>
