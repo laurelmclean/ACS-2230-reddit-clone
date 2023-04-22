@@ -1,16 +1,16 @@
 const Post = require('../models/post');
 
 module.exports = (app) => {
-
     // INDEX - all posts
     // stretch challenge - async and await
     app.get('/', async (req, res) => {
-    try {
-        const posts = await Post.find({}).lean();
-        return res.render('posts-index', { posts });
-    } catch (err) {
-        console.log(err.message);
-    }
+        const currentUser = req.user;
+        try {
+            const posts = await Post.find({}).lean();
+            return res.render('posts-index', { posts, currentUser });
+        } catch (err) {
+            console.log(err.message);
+        }
     });
 
     // NEW - form
@@ -19,17 +19,13 @@ module.exports = (app) => {
     });
 
     // CREATE
-    app.post('/posts/new', async (req, res) => {
-        try {
-            // Validate form data
-            // Instantiate instance of Post model
+    app.post('/posts/new', (req, res) => {
+        if (req.user) {
             const post = new Post(req.body);
-            // Save instance of Post model to DB and redirect to the root
-            await post.save();
-            res.redirect('/');
-        } catch (err) {
-            console.log(err);
-            res.status(500).send('Server error');
+
+            post.save(() => res.redirect('/'));
+        } else {
+            return res.status(401); // UNAUTHORIZED
         }
     });
 
