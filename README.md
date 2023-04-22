@@ -2,7 +2,7 @@
 
 For this project, I developed a clone of Reddit with posts, subreddits, and authentication. 
 
-## Tools
+## Tools used:
 
 - Node.js
 - Express.js
@@ -10,4 +10,5 @@ For this project, I developed a clone of Reddit with posts, subreddits, and auth
 - JSON Web Tokens (JWT)
 
 ## To Run:
+
 `npm start` in terminal and launch in browser.
