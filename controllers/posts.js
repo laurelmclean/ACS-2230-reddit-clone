@@ -46,9 +46,10 @@ module.exports = (app) => {
     // SHOW - individual post
     // stretch challenge - async and await
     app.get('/posts/:id', async (req, res) => {
+        const currentUser = req.user;
         try {
-            const post = await Post.findById(req.params.id).lean().populate({ path: 'comments', populate: { path: 'author' } }).populate('author');
-            return res.render('posts-show', { post });
+            const post = await Post.findById(req.params.id).populate('comments').lean();
+            return res.render('posts-show', { post, currentUser });
         } catch (err) {
             console.log(err.message);
         }
@@ -56,9 +57,10 @@ module.exports = (app) => {
 
       // Subreddit
     app.get('/n/:subreddit', async (req, res) => {
+        const { user } = req;
         try {
-            const posts = await Post.find({ subreddit: req.params.subreddit }).lean().populate('author');
-        res.render('posts-index', { posts });
+            const posts = await Post.find({ subreddit: req.params.subreddit }).lean();
+        res.render('posts-index', { posts, user });
         } catch (err) {
         console.log(err.message);
         }
