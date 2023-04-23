@@ -76,7 +76,7 @@ module.exports = (app) => {
         try {
             const post = await Post.findById(req.params.id);
             post.upVotes.push(req.user._id);
-            post.voteScore += 1;
+            post.voteScore = (post.voteScore || 0) + 1; // Check if voteScore is null or undefined, and set to 0 if it is
             await post.save();
             return res.status(200);
         } catch (err) {
@@ -88,13 +88,14 @@ module.exports = (app) => {
         try {
             const post = await Post.findById(req.params.id);
             post.downVotes.push(req.user._id);
-            post.voteScore -= 1;
+            post.voteScore = (post.voteScore || 0) - 1; // Check if voteScore is null or undefined, and set to 0 if it is
             await post.save();
             return res.status(200);
         } catch (err) {
             console.log(err);
         }
     });
+
 
 
 };
