@@ -26,6 +26,7 @@ app.use(express.static('public'));
 require('./controllers/posts')(app); 
 require('./controllers/comments.js')(app);
 require('./controllers/auth.js')(app);
+require('./controllers/replies.js')(app);
 
 app.get('/', (req, res) => {
     res.render('home');
