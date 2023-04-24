@@ -11,7 +11,7 @@
             </div>
             {{/if}}
             {{#each post.comments}}
-        {{> comment comment=this postId=../post._id currentUser=../currentUser}}
+            {{> comment comment=this postId=../post._id currentUser=../currentUser}}
             {{/each}}
         </form>
     </div>
